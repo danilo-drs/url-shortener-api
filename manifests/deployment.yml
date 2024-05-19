@@ -1,0 +1,29 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: meli-api-kubernetes
+  labels: 
+     app: meli-api
+
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: meli-api
+
+  template:
+    metadata:
+      labels:
+        app: meli-api
+    spec:
+      containers:
+      - name: meli-api
+        image: DOCKER_IMAGE
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8081
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
