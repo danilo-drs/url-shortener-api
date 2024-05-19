@@ -7,7 +7,7 @@ PROJECT_PKG=meli-api
 # AWS ECR REPO
 ECR_REPO_NAME=$APPNAME
 # AWS Region for the ECR
-AWS_REGION=ap-southeast-2
+AWS_REGION=us-east-2
 # Commit hash for the service
 COMMIT_HASH=$(git log --pretty=format:%h -n 1 -- .)
 echo "Commit hash: $COMMIT_HASH"
