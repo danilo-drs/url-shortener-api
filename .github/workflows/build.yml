@@ -37,7 +37,7 @@ jobs:
     aws-deploy:
       name: AWS EKS Deploy
       runs-on: ubuntu-latest
-      if: ${{ job.status == 'success' }}
+      
       steps:
       - name: Checkout
         uses: actions/checkout@v2
