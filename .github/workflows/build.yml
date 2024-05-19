@@ -34,4 +34,26 @@ jobs:
           sudo chmod +x build.sh
           ./build.sh
   
-  
+    aws-deploy:
+      name: AWS EKS Deploy
+      runs-on: ubuntu-latest
+      if: ${{ job.status == 'success' }}
+      steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Apply changes to aws infrastructure
+        id: build-image
+        env:
+          SERVICE_DIR: infra
+        run: |
+          cd $SERVICE_DIR
+          make depend  
+          make deploy
