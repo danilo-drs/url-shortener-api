@@ -6,7 +6,7 @@ on:
     branches: [ main ]
 
 env:
-  ECR_REPOSITORY: flask-app
+  ECR_REPOSITORY: meli-api
   EKS_CLUSTER_NAME: Kubernetes-demo 
   AWS_REGION: us-east-1
 
