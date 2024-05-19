@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 
@@ -31,6 +32,11 @@ func main() {
 		panic("Error connecting to the database " + err.Error())
 	}
 
+	query := "SELECT true FROM short_url WHERE key = $1"
+	var exists bool
+	repository.DB.QueryRow(query, "asasas").Scan(&exists)
+
+	fmt.Println(exists)
 	//TODO: ADD Oauth2 authentication
 
 	// Create the router
