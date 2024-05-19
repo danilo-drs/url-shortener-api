@@ -7,7 +7,7 @@ on:
 
 env:
   ECR_REPOSITORY: meli-api
-  EKS_CLUSTER_NAME: Kubernetes-demo 
+  EKS_CLUSTER_NAME: meli
   AWS_REGION: us-east-2
 
 jobs:
