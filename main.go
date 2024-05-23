@@ -37,7 +37,6 @@ func main() {
 	repository.DB.QueryRow(query, "asasas").Scan(&exists)
 
 	fmt.Println(exists)
-	//TODO: ADD Oauth2 authentication
 
 	// Create the router
 	r := mux.NewRouter()
@@ -46,6 +45,7 @@ func main() {
 	r.HandleFunc("/{key}", controller.DeleteHandler).Methods("DELETE")
 	r.HandleFunc("/key/{key}", controller.GetHandler).Methods("GET")
 	r.HandleFunc("/all", controller.GetAllHandler).Methods("GET")
+	r.HandleFunc("/healthcheck", controller.HealthCheckHandler).Methods("GET")
 
 	// Get the HTTP host and port
 	httpHost := os.Getenv("HTTP_HOST")
