@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: meli-api
-        image: DOCKER_IMAGE
+        image: k8s/meli/api:0.1
         imagePullPolicy: Always
         ports:
         - containerPort: 8081
