@@ -20,7 +20,6 @@ spec:
     spec:
       containers:
       - name: meli-api
-        image: k8s/meli/api:0.1
-        imagePullPolicy: Always
+        image: IMAGE_NAME
         ports:
         - containerPort: 8081
