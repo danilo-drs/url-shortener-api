@@ -54,5 +54,5 @@ jobs:
         IMAGE_TAG: ${{ steps.commit.outputs.short }}
       run: |
         sed -i.bak "s|DOCKER_IMAGE|$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|g" manifests/deployment.yml && \
-        kubectl apply -f manifests/deployment.yml --validate=false
-        kubectl apply -f manifests/service.yml --validate=false
+        kubectl apply -f .devops/manifests/deployment.yml
+        kubectl apply -f .devops/manifests/service.yml 
