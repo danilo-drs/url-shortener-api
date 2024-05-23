@@ -19,3 +19,11 @@
 
 # Go workspace file
 go.work
+
+*.sha256
+*.hcl
+kubectl
+.terraform/
+*.hcl
+*.tfstate
+*.tfstate.backup
