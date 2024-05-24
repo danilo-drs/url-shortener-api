@@ -43,9 +43,9 @@ resource "aws_eks_node_group" "private-nodes" {
   instance_types = ["t3.small"]
 
   scaling_config {
-    desired_size = 1
+    desired_size = 0
     max_size     = 5
-    min_size     = 1
+    min_size     = 0
   }
 
   update_config {
