@@ -1,22 +1,19 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 
 	"meli-api/controller"
-	"meli-api/repository"
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 )
 
 func main() {
-	var err error
 
 	// Load the .env file
-	err = godotenv.Load()
+	var err error = godotenv.Load()
 	if err != nil {
 		panic("Error loading .env file")
 	}
@@ -27,16 +24,16 @@ func main() {
 	}
 
 	// Connect to the database
-	err = repository.Connect()
-	if err != nil {
-		panic("Error connecting to the database " + err.Error())
-	}
+	// err = repository.Connect()
+	// if err != nil {
+	// 	panic("Error connecting to the database " + err.Error())
+	// }
 
-	query := "SELECT true FROM short_url WHERE key = $1"
-	var exists bool
-	repository.DB.QueryRow(query, "asasas").Scan(&exists)
+	// query := "SELECT true FROM short_url WHERE key = $1"
+	// var exists bool
+	// repository.DB.QueryRow(query, "asasas").Scan(&exists)
 
-	fmt.Println(exists)
+	// fmt.Println(exists)
 
 	// Create the router
 	r := mux.NewRouter()
