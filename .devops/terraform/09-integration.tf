@@ -37,6 +37,12 @@ resource "aws_lb_target_group" "meli_target_group" {
   target_type = "instance"
 }
 
+resource "aws_lb_target_group_attachment" "meli_target_group_attachment" {
+  target_group_arn = aws_lb_target_group.meli_target_group.arn
+  target_id        = "i-082fc5bf5d3d66b17"
+  port             = 8081
+}
+
 resource "aws_lb_listener" "meli_listener" {
   load_balancer_arn = aws_lb.meli_load_balancer.arn
   port              = 80
