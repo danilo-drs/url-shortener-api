@@ -12,6 +12,7 @@ resource "aws_db_instance" "melidb" {
   allocated_storage      = 5
   engine                 = "postgres"
   engine_version         = "16.1"
+  db_name                = "meli"
   username               = "postgres"
   password               = "jOFjqRTpKZ0QptqDVVln"
   db_subnet_group_name   = aws_db_subnet_group.subnet_meli.name
@@ -19,17 +20,6 @@ resource "aws_db_instance" "melidb" {
   parameter_group_name   = aws_db_parameter_group.pg_meli.name
   publicly_accessible    = true
   skip_final_snapshot    = true
-}
-
-resource "aws_db_instance" "meli_replica" {
-  identifier             = "melireplica"
-  replicate_source_db    = aws_db_instance.melidb.id
-  instance_class         = "db.t3.micro"
-  apply_immediately      = true
-  publicly_accessible    = true
-  skip_final_snapshot    = true
-  vpc_security_group_ids = [aws_security_group.vpc_link.id]
-  parameter_group_name   = aws_db_parameter_group.pg_meli.name
 }
 
 

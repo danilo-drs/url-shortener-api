@@ -29,14 +29,31 @@ resource "aws_lb" "meli_load_balancer" {
   ]
 }
 
-data "aws_lb_listener" "meli_listener" {
-  load_balancer_arn = aws_lb.meli_load_balancer.arn
-  port              = 443
+resource "aws_lb_target_group" "meli_target_group" {
+  name        = "meli-target-group"
+  port        = 80
+  protocol    = "HTTP"
+  vpc_id      = aws_vpc.meli_main.id
+  target_type = "instance"
 }
+
+resource "aws_lb_listener" "meli_listener" {
+  load_balancer_arn = aws_lb.meli_load_balancer.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.meli_target_group.arn
+  }
+}
+
+
+
 resource "aws_apigatewayv2_integration" "eks" {
   api_id          = aws_apigatewayv2_api.meli_api.id
-  integration_uri = "arn:aws:elasticloadbalancing:us-east-2:${var.account_id}:listener/net/${aws_lb.meli_load_balancer.arn}/${data.aws_lb_listener.meli_listener.id}"
-  # integration_uri    = "arn:aws:elasticloadbalancing:us-east-2:339713144439:listener/net/a14ee6952610944e1a322aa63a6032cd/9fb898d5188c9c5e/05b30dc2c0963bd7"
+  integration_uri = aws_lb_listener.meli_listener.arn
+  # integration_uri    = "arn:aws:elasticloadbalancing:us-east-2:339713144439:listener/app/meli-load-balancer/7f7f9c8c11885d89/7320ec9e64ace630"
   integration_type   = "HTTP_PROXY"
   integration_method = "ANY"
   connection_type    = "VPC_LINK"
