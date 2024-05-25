@@ -15,21 +15,35 @@ resource "aws_apigatewayv2_vpc_link" "eks" {
   security_group_ids = [aws_security_group.vpc_link.id]
   subnet_ids = [
     aws_subnet.private-us-east-2a.id,
-    aws_subnet.private-us-east-2b.id
+    aws_subnet.private-us-east-2b.id,
+    aws_subnet.public-us-east-2a.id,
+    aws_subnet.public-us-east-2b.id
+  ]
+}
+resource "aws_lb" "meli_load_balancer" {
+  name               = "meli-load-balancer"
+  load_balancer_type = "application"
+  subnets = [
+    aws_subnet.public-us-east-2a.id,
+    aws_subnet.public-us-east-2b.id
   ]
 }
 
+data "aws_lb_listener" "meli_listener" {
+  load_balancer_arn = aws_lb.meli_load_balancer.arn
+  port              = 443
+}
 resource "aws_apigatewayv2_integration" "eks" {
-  api_id = aws_apigatewayv2_api.meli_api.id
-
-  integration_uri    = "arn:aws:elasticloadbalancing:us-east-2:339713144439:listener/net/a14ee6952610944e1a322aa63a6032cd/9fb898d5188c9c5e/05b30dc2c0963bd7"
+  api_id          = aws_apigatewayv2_api.meli_api.id
+  integration_uri = "arn:aws:elasticloadbalancing:us-east-2:${var.account_id}:listener/net/${aws_lb.meli_load_balancer.arn}/${data.aws_lb_listener.meli_listener.id}"
+  # integration_uri    = "arn:aws:elasticloadbalancing:us-east-2:339713144439:listener/net/a14ee6952610944e1a322aa63a6032cd/9fb898d5188c9c5e/05b30dc2c0963bd7"
   integration_type   = "HTTP_PROXY"
   integration_method = "ANY"
   connection_type    = "VPC_LINK"
   connection_id      = aws_apigatewayv2_vpc_link.eks.id
 }
 
-resource "aws_apigatewayv2_route" "get_echo" {
+resource "aws_apigatewayv2_route" "get_healthcheck" {
   api_id = aws_apigatewayv2_api.meli_api.id
 
   route_key = "GET /healthcheck"
@@ -39,3 +53,4 @@ resource "aws_apigatewayv2_route" "get_echo" {
 output "meli_base_url" {
   value = "${aws_apigatewayv2_stage.dev.invoke_url}/healthcheck"
 }
+

@@ -12,11 +12,11 @@ provider "aws" {
 }
 
 variable "cluster_name" {
-  default = "meli"
+  default = "meli_cluster"
 }
 
 variable "cluster_version" {
-  default = "1.29"
+  default = "1.30"
 }
 
 variable "account_id" {

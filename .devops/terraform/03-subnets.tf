@@ -47,3 +47,16 @@ resource "aws_subnet" "public-us-east-2b" {
     "kubernetes.io/cluster/${var.cluster_name}" = "owned"
   }
 }
+
+resource "aws_db_subnet_group" "subnet_meli" {
+  name = "subnet_meli"
+  subnet_ids = [
+    aws_subnet.private-us-east-2a.id,
+    aws_subnet.private-us-east-2b.id,
+    aws_subnet.public-us-east-2a.id,
+    aws_subnet.public-us-east-2b.id
+  ]
+  tags = {
+    Name = "meli"
+  }
+}

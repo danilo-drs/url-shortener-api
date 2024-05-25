@@ -1,16 +1,55 @@
-resource "aws_db_instance" "meli_db" {
-  allocated_storage        = 20
-  engine                   = "postgres"
-  engine_version           = "16.1"
-  identifier               = "meli"
-  instance_class           = "db.t3.micro"
-  storage_encrypted        = false
-  publicly_accessible      = true
-  delete_automated_backups = true
-  skip_final_snapshot      = true
-  db_name                  = "meli"
-  username                 = "postgres"
-  password                 = "jOFjqRTpKZ0QptqDVVln"
-  apply_immediately        = true
-  multi_az                 = false
+resource "aws_db_parameter_group" "pg_meli" {
+  name   = "pgmeli"
+  family = "postgres16"
+  parameter {
+    name  = "log_connections"
+    value = "1"
+  }
+}
+resource "aws_db_instance" "melidb" {
+  identifier             = "melidb"
+  instance_class         = "db.t3.micro"
+  allocated_storage      = 5
+  engine                 = "postgres"
+  engine_version         = "16.1"
+  username               = "postgres"
+  password               = "jOFjqRTpKZ0QptqDVVln"
+  db_subnet_group_name   = aws_db_subnet_group.subnet_meli.name
+  vpc_security_group_ids = [aws_security_group.vpc_link.id]
+  parameter_group_name   = aws_db_parameter_group.pg_meli.name
+  publicly_accessible    = true
+  skip_final_snapshot    = true
+}
+
+resource "aws_db_instance" "meli_replica" {
+  identifier             = "melireplica"
+  replicate_source_db    = aws_db_instance.melidb.id
+  instance_class         = "db.t3.micro"
+  apply_immediately      = true
+  publicly_accessible    = true
+  skip_final_snapshot    = true
+  vpc_security_group_ids = [aws_security_group.vpc_link.id]
+  parameter_group_name   = aws_db_parameter_group.pg_meli.name
+}
+
+
+output "melidb_host" {
+  value = aws_db_instance.melidb.address
+}
+
+output "melidb_port" {
+  value = aws_db_instance.melidb.port
+}
+
+output "melidb_name" {
+  value = aws_db_instance.melidb.db_name
+}
+
+output "melidb_username" {
+  value = aws_db_instance.melidb.username
+}
+
+output "melidb_password" {
+  value     = aws_db_instance.melidb.password
+  sensitive = true
 }
