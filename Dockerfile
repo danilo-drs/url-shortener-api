@@ -15,5 +15,5 @@ RUN apk --no-cache add git alpine-sdk build-base gcc
 # Build the Go app
 RUN go build -o  apiserver main.go
 
-EXPOSE 8081
+EXPOSE 80
 CMD ["./apiserver"]

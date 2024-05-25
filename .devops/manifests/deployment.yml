@@ -22,4 +22,4 @@ spec:
       - name: meli-api
         image: IMAGE_NAME
         ports:
-        - containerPort: 8081
+        - containerPort: 80
