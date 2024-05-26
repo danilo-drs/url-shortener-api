@@ -51,5 +51,6 @@ func main() {
 	httpPort := os.Getenv("HTTP_PORT")
 
 	// Start the HTTP server
+	print("Server started at " + httpHost + ":" + httpPort)
 	http.ListenAndServe(httpHost+":"+httpPort, r)
 }

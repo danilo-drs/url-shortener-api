@@ -13,8 +13,8 @@ COPY . .
 RUN apk --no-cache add git alpine-sdk build-base gcc
 
 # Build the Go app
-RUN go build -o  apiserver main.go
+RUN go build -o  meliApi main.go
 
 EXPOSE 8099
 
-CMD ["./apiserver"]
+CMD ["./meliApi"]
