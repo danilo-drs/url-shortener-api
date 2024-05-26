@@ -27,3 +27,5 @@ kubectl
 *.hcl
 *.tfstate
 *.tfstate.backup
+__debug*
+apiserver
