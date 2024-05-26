@@ -30,17 +30,26 @@ resource "aws_lb" "meli_load_balancer" {
 }
 
 resource "aws_lb_target_group" "meli_target_group" {
-  name        = "meli-target-group"
-  port        = 80
-  protocol    = "HTTP"
-  vpc_id      = aws_vpc.meli_main.id
-  target_type = "instance"
-}
+  name                 = "meli-target-group"
+  port                 = 80
+  protocol             = "HTTP"
+  vpc_id               = aws_vpc.meli_main.id
+  target_type          = "instance"
+  deregistration_delay = 1
+  lifecycle {
+    create_before_destroy = true
+  }
 
-resource "aws_lb_target_group_attachment" "meli_target_group_attachment" {
-  target_group_arn = aws_lb_target_group.meli_target_group.arn
-  target_id        = "i-082fc5bf5d3d66b17"
-  port             = 8081
+  health_check {
+    path                = "/healthcheck"
+    protocol            = "HTTP"
+    port                = 8099
+    interval            = 30
+    timeout             = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+
+  }
 }
 
 resource "aws_lb_listener" "meli_listener" {
@@ -54,7 +63,20 @@ resource "aws_lb_listener" "meli_listener" {
   }
 }
 
+resource "aws_alb_listener_rule" "rule-1" {
+  action {
+    target_group_arn = "arn:aws:elasticloadbalancing:us-east-2:339713144439:targetgroup/meli-target-group/0199d723bf60a04b"
+    type             = "forward"
+  }
+  condition {
+    http_request_method {
+      values = ["GET"]
+    }
+  }
 
+  listener_arn = "arn:aws:elasticloadbalancing:us-east-2:339713144439:listener/app/meli-load-balancer/7f7f9c8c11885d89/7320ec9e64ace630"
+  priority     = 100
+}
 
 resource "aws_apigatewayv2_integration" "eks" {
   api_id          = aws_apigatewayv2_api.meli_api.id

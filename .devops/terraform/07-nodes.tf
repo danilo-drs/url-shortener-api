@@ -36,7 +36,9 @@ resource "aws_eks_node_group" "private-nodes" {
 
   subnet_ids = [
     aws_subnet.private-us-east-2a.id,
-    aws_subnet.private-us-east-2b.id
+    aws_subnet.private-us-east-2b.id,
+    aws_subnet.public-us-east-2a.id,
+    aws_subnet.public-us-east-2b.id
   ]
 
   capacity_type  = "ON_DEMAND"
