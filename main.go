@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 
@@ -30,12 +29,6 @@ func main() {
 	if err != nil {
 		panic("Error connecting to the database " + err.Error())
 	}
-
-	query := "SELECT true FROM short_url WHERE key = $1"
-	var exists bool
-	repository.DB.QueryRow(query, "asasas").Scan(&exists)
-
-	fmt.Println(exists)
 
 	// Create the router
 	r := mux.NewRouter()
